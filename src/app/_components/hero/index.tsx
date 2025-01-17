@@ -2,14 +2,27 @@
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useMutation } from 'convex/react';
 import { useState } from 'react';
+import { api } from '../../../../convex/_generated/api';
+import { useRouter } from 'next/navigation';
 
 const Hero = () => {
   const [promptTxt, setPromptTxt] = useState('');
+  const { push } = useRouter();
+
+  const createWorkspace = useMutation(api.workspace.createWorkspace);
 
   const handlePromptTxtClick = (text: string) => {
     setPromptTxt(text);
   };
+
+  const handleGenerateWorkspace = async () => {
+    const workspaceId = await createWorkspace({ messages: [promptTxt] });
+
+    push(`workspace/${workspaceId}`);
+  };
+
   return (
     <div className='flex h-full flex-col items-center justify-center '>
       <h2 className='text-4xl font-bold mb-2'>What Do You Want to Generate?</h2>
@@ -23,7 +36,11 @@ const Hero = () => {
         onChange={(e) => setPromptTxt(e.target.value)}
       />
 
-      <Button variant='destructive' disabled={!promptTxt}>
+      <Button
+        variant='destructive'
+        disabled={!promptTxt}
+        onClick={handleGenerateWorkspace}
+      >
         Generate <span className='ml-1'>🚀</span>
       </Button>
 

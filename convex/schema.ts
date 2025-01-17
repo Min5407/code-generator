@@ -3,7 +3,7 @@ import { v } from 'convex/values';
 
 const schema = defineSchema({
   workspace: defineTable({
-    message: v.any(), //JSON object
+    message: v.array(v.any()),
     fileData: v.optional(v.any()),
   }),
 });
